@@ -1,18 +1,14 @@
 {
-  "name": "crypto-token",
-  "version": "1.0.0",
-  "description": "Crypto Token",
-  "main": "truffle-config.js",
-  "directories": {
-    "test": "test"
+  "name": "hardhat-project",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.0",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.9.2"
   },
-  "scripts": {
-    "test": "\"test\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "\"crypto-token\""
-  },
-  "author": "Avishek Raj Panta",
-  "license": "ISC"
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
 }

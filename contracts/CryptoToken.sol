@@ -1,63 +1,60 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 contract CryptoToken {
-	string public name = 'Crypto Token';
-	string public symbol = 'CT';
-	string public standard = 'Crypto Token v1.0';
-	uint public totalSupply;
-	address public owner;
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    uint public totalSupply;
 
-	event Transfer(
-		address indexed _from,
-		address indexed _to,
-		uint _value
-		);
+    event Transfer(
+        address indexed _from,
+        address indexed _to,
+        uint _value
+    );
 
-	event Approval(
-		address indexed _owner,
-		address indexed _spender,
-		uint _value
-		);
+    event Approval(
+        address indexed _owner,
+        address indexed _spender,
+        uint _value
+    );
 
-	mapping (address => uint) public balanceOf;
-	mapping (address => mapping(address => uint)) public allowance;
-	
-	constructor (uint _initialSupply) {
-		owner = msg.sender;
-		balanceOf[owner] = _initialSupply;
-		totalSupply = _initialSupply;
-	}
+    mapping (address => uint) public balanceOf;
+    mapping (address => mapping(address => uint)) public allowance;
 
-	function transfer(address _to, uint _value) public returns (bool success) {
-		require(_value <= balanceOf[msg.sender], 'You do not have enough balance');
-		// will add: cannot transfer to own address
-		balanceOf[msg.sender] -= _value;
-		balanceOf[_to] += _value;
+    constructor (string memory _name, string memory _symbol, uint8 _decimals, uint _initialSupply) {
+        name = _name;
+        symbol = _symbol;
+        decimals = _decimals;
+        balanceOf[msg.sender] = _initialSupply;
+        totalSupply = _initialSupply;
+    }
 
-		emit Transfer(msg.sender, _to, _value);
-		return true;
-	}
+    function transfer(address _to, uint _value) public returns (bool sucess) {
+        require(balanceOf[msg.sender] >= _value, 'Not enough tokens');
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
 
-	function approve(address _spender, uint _value) public returns (bool success) {
-		allowance[msg.sender][_spender] = _value;
-		// will write different function for allowance
-		emit Approval(msg.sender, _spender, _value);
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
 
-		return true;
-	}
+    function approve(address _spender, uint _value) public returns (bool success) {
+        allowance[msg.sender][_spender] += _value;
+        emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
 
-	function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
-		require(balanceOf[_from] >= _value, 'amount should not exceed the balance');
-		require(allowance[_from][msg.sender] >= _value, 'amount should not exceed allowance');
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        require(balanceOf[_from] >= _value, "Not enough tokens");
+        require(allowance[_from][msg.sender] >= _value, "Cannot exceed approved amount");
 
-		balanceOf[_from] -= _value;
-		balanceOf[_to] += _value;
+        balanceOf[_from] -= _value;
+        balanceOf[_to] += _value;
 
-		allowance[_from][msg.sender] -= _value;
+        allowance[_from][msg.sender] -= _value;
 
-		emit Transfer(_from, _to, _value);
-
-		return true;
-	}
+        emit Transfer(_from, _to, _value);
+        return true;
+    }
 }
